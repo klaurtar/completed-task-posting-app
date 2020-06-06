@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://kit.fontawesome.com/b884a4526c.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+
+    <title>Post App</title>
+</head>
+<body>
+
+    <h1 class="header">Add a Post</h1>
+    <form id="form" action="#">
+      <div id="errorMessage"></div>
+      <input class="form-control" id="title" type="text" placeholder="Title" />
+      <br />
+      <textarea class="form-control"
+        name=""
+        id="body"
+        cols="30"
+        rows="10"
+        placeholder="Body"
+      ></textarea>
+      <br />
+      <div id="footer">
+        <input class="form-control" id="author" type="text" placeholder="Author" />
+        <a href="#" id="submitButton">Add Post</a>
+    </div>
+    </form>
+    <hr />
+
+    <div class="header">
+      <h1>Posts</h1>
+    </div>
+    
+    <div class="options">
+      <div class="searchBarContainer">
+        <input type="text" name="search" id="searchBar" placeholder="Search">
+        <i class="fas fa-search"></i>
+      </div>
+      
+      <select id="filterBy" name="options">
+        <option value="date">Date</option>
+        <option value="title">Title</option>
+        <option value="body">Body</option>
+        <option value="author">Author</option>
+      </select>
+      
+
+      <button id="delete-all">Delete all Posts</button>
+    </div>
+    
+</body>
+<script type="text/javascript" src="templates copy/tmpl.js"></script>
+<script type="text/javascript" src="ejs/ejs.min.js"></script>
+<script type="text/javascript" src="util.js"></script>
+<script type="text/javascript" src="Dialog.js"></script>
+<script type="text/javascript" src="DialogManager.js"></script>
+<script type="text/javascript" src="Post.js"></script>
+<script type="text/javascript" src="PostManager.js"></script>
+<script type="text/javascript" src="app.js"></script>
+</html>

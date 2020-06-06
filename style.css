@@ -1,0 +1,210 @@
+/* *,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+} */
+
+/* html{
+    box-sizing: border-box;
+    font-size: 62.5%; 
+} */
+
+
+.post{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 50%;
+    max-width: 75%;
+    margin: 0 auto 2rem auto;
+    background-color: #eee;
+    border-radius: 15px;
+    padding: 20px;
+    background-color: lightgrey;
+    box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.75)
+}
+form{
+  margin-bottom: 1rem;
+}
+.header{
+  text-align: center;
+  /* position: relative; */
+  display: flex;
+  justify-content: space-around;
+}
+.options{
+  text-align: center;
+  /* position: relative; */
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 2rem;
+  align-items: center;
+}
+#title{
+  display: block;
+  margin: 0 auto;
+  width: 50%;
+  height: 1.3rem;
+}
+#body{
+  display: block;
+  margin: 0 auto;
+  width: 50%;
+}
+#footer{
+  display: flex;
+  margin: 0 auto;
+  width: 50%;
+  justify-content: space-between;
+
+}
+#author{
+  width: 50%;
+  height: 1.3rem;
+}
+.headerPosted{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+.bodyPosted{
+    width: 100%;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+}
+.authorPosted{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+#delete-all{
+    /* position: absolute;
+    top: 25%;
+    left: 90%; */
+    background-color: red;
+    font-size: 1.3rem;
+    cursor: pointer;
+    color: white;
+    
+    display: block;
+    align-self: center;
+}
+
+#delete-all:disabled,
+#delete-all[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
+}
+
+/* .secret-item{
+    color: transparent;
+} */
+
+#errorMessage{
+  text-align: center;
+    color: red;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+#searchBar{
+  align-self: center;
+}
+
+.searchBarContainer{
+  display: flex;
+  align-items: center;
+}
+
+/* #loadingWord{
+  display: none;
+} */
+.deleteButton{
+ text-align: end; 
+ width: 100%;
+ 
+ margin-bottom: .5rem;
+}
+
+.deleteButton button {
+  color: red;
+  font-size: 1rem;
+  border-radius: 15px;
+}
+
+
+.edit-icon{
+  color: green;
+}
+
+#editHolder{
+  padding: 25px;
+  z-index: 10;
+  
+  background: lightblue;
+  width: 50%;
+  border-radius: 15px;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#close-button{
+  align-self: flex-end;
+  cursor: pointer;
+}
+
+.overlay{
+  background-color: rgba(0,0,0,.7);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 20;
+  display: none;
+  bottom: 0;
+  right: 0;
+}
+
+.dialog-box{
+  width: 50%;
+  border: none;
+  border-radius: 15px;
+  background-color: #0B0C10;
+  color: #66FCf1;
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 30;
+  display: none;
+}
+
+.close-icon{
+  text-align: end;
+}
+
+.x-icon{
+  font-weight: bold;
+  cursor: pointer;
+}
+/* .dialog-box input[type="text"], input[type="text"]:focus, input[type="text"]:active, #bodyEdit {
+  background-color : #1F2833; 
+  border: none;
+  color: #66FCf1;
+} */
