@@ -22,8 +22,8 @@ class Dialog{
         this.$dialogBox.style.width = this.options.width;
         this.$doneButton.innerText = this.options.doneButtonText;
 
-        this.onSaveHandler = false;
-        this.onCloseHandler = false;
+        this.onSaveHandler = [];
+        this.onCloseHandler = [];
 
         this.setUpListeners();
     }
@@ -51,21 +51,32 @@ class Dialog{
         }
     }
     onSave(callbackHandler) {
-        this.onSaveHandler = callbackHandler;
+        this.onSaveHandler.push(callbackHandler);
     }
     onClose(callBackHandler) {
-        this.onCloseHandler = callBackHandler;
+        this.onCloseHandler.push(callBackHandler);
     }
     getDialogElement() {
         return this.$dialogElement;
     }
+
+
     setUpListeners() {
         this.$doneButton.addEventListener('click', () => {
-            this.onSaveHandler && this.onSaveHandler();
+            let allowClose = true;
+            this.onSaveHandler.forEach(handler => {
+                if(handler() === false) allowClose = false;
+            });
+            // this.onSaveHandler && this.onSaveHandler();
+            if(allowClose){
+                this.close();
+            }
             
-            this.close();
         });
         this.$cancelButton.addEventListener('click', () => {
+            this.onCloseHandler.forEach(handler => {
+                handler();
+            })
             this.close();
             //this.onCloseHandler && this.onCloseHandler();
         })

@@ -208,3 +208,30 @@ form{
   border: none;
   color: #66FCf1;
 } */
+
+.flex{
+  display: flex;
+  justify-content: flex-end;
+  padding-right: .5rem;
+}
+
+#analytics-container{
+  display:flex;
+  flex-direction: column;
+  align-items: flex-end;
+  /* align-items: flex-end; */
+}
+
+#analytics-header{
+  align-self: center;
+  font-size: .5rem;
+}
+
+#analytics-metrics{
+  display: flex;
+  flex-direction: column;
+  /* justify-content: space-between; */
+  align-items: center;
+  font-size: .5rem;
+  line-height: .2;
+}

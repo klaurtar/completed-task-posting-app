@@ -51,3 +51,20 @@ const dialogFormTemplate = `
         </form>
         <hr>
 `;
+
+const analyticsTemplate = `
+        <div id="analytics-container">
+            <p id="analytics-header">Analytics</p>
+            <div id="analytics-metrics">
+                <div class="">
+                    <p>Number of Posts: <span><%- numberOfPosts %></span></p>
+                </div>
+                <div class="">
+                    <p>Number of Authors: <span><%- numberOfAuthors %></span></p>
+                </div>
+                <div class="">
+                    <p>Most Frequent Author: <span><%- mostFrequentAuthor %></span></p>
+                </div>
+            </div>
+        </div>
+        `;

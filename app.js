@@ -13,6 +13,8 @@ const app = (function(){
 
     let postCollection = [];
     let errorArr = [];
+    let searchTerm = '';
+    let sortBy = 'date'; // date|author|title|body
 
     
     
@@ -20,12 +22,12 @@ const app = (function(){
 
     function addPostClicked(e){
       e.preventDefault();
-        validatePost(title.value, body.value, author.value);
+        validatePost(title.value, body.value, author.value, errorArr);
         
         if(errorArr.length > 0){
-            renderErrors();
+            renderErrors($errorMessage, errorArr);
         } else {
-            clearErrors();
+            clearErrors($errorMessage);
             createNewPost();
             savePosts();
             refreshFields();
@@ -34,9 +36,9 @@ const app = (function(){
 
 
     
-    function clearErrors() {
-        if ($errorMessage.innerText !== "") {
-          $errorMessage.innerText = "";
+    function clearErrors($domElement) {
+        if ($domElement.innerText !== "") {
+          $domElement.innerText = "";
         }
       } 
 
@@ -48,12 +50,10 @@ const app = (function(){
         postCollection.push(currentPost);
         renderPost(currentPost);
         deleteButtonDisabledOrNot();
+
+        analytics.update(postCollection);
     }
 
-
-    function deleteSinglePost() {
-        
-    }
 
     function deleteAllPosts() {
         const dialog = DialogManager.createDialog({color: "red", doneButtonText: "Delete", padding: "50px"});
@@ -61,8 +61,11 @@ const app = (function(){
         dialog.setContent("<h1>Are you sure you want to delete all posts?</h1>");
         dialog.onSave(() => {
           window.localStorage.clear();
+          postCollection = [];
            PostManager.removeHTML();
            deleteButtonDisabledOrNot();
+
+           analytics.removeHTML();
         });
         
         
@@ -85,16 +88,48 @@ const app = (function(){
     }
 
 
-    function renderAllPosts(arrOfPosts) {
-      PostManager.removeHTML();
-        arrOfPosts.forEach(currentPost => {
-            renderPost(currentPost);
-        })
+    // function renderAllPosts(arrOfPosts) {
+    //   PostManager.removeHTML();
+    //   analytics.update(arrOfPosts);
+    //   arrOfPosts.forEach(currentPost => {
+    //       renderPost(currentPost);
+    //   })
 
-        deleteButtonDisabledOrNot();
+    //   deleteButtonDisabledOrNot();
+    // }
+    function renderAllPosts() {
+      PostManager.removeHTML();
+      analytics.update(postCollection);
+      searchTerm = $searchBar.value;
+
+      console.log(searchTerm, "Search Term");
+
+      console.log("post collection", postCollection);
+      let postsWillBeRendered;
+      if(searchTerm !== ''){
+        postsWillBeRendered = postCollection.filter(post =>
+            post.title.toUpperCase().includes(searchTerm.toUpperCase()) ||
+            post.body.toUpperCase().includes(searchTerm.toUpperCase()) ||
+            post.author.toUpperCase().includes(searchTerm.toUpperCase()));
+
+        //console.log("filter Posts", filteredPosts, searchTerm, postCollection);
+
+        // filteredPosts.forEach(post => {
+        //   renderPost(post);
+        // });
+      }else{
+        postsWillBeRendered = postCollection;
+      }
+      
+      postsWillBeRendered.forEach(post => {
+        renderPost(post);
+      })
+
+      deleteButtonDisabledOrNot();
     }
 
     function renderPost(postObject) {
+  
       const post = PostManager.createPost(postObject.id);
 
       post.setContent(ejs.render(postTemplate, postObject));
@@ -108,12 +143,28 @@ const app = (function(){
                 bodyEdit = document.querySelector('#bodyEdit'),
                 authorEdit = document.querySelector('#authorEdit');
 
-                postObject.title = titleEdit.value;
-                postObject.body = bodyEdit.value;
-                postObject.author = authorEdit.value;
-                postObject.date = dateCreator();
-                savePosts();
-                renderAllPosts(postCollection);
+                let editErrors = [];
+
+                validatePost(titleEdit.value, bodyEdit.value, authorEdit.value, editErrors);
+
+                if(editErrors.length !== 0){
+                  renderErrors(dialog.$head, editErrors);
+                  return false;
+                } else {
+                  clearErrors(dialog.$head);
+
+                  postObject.title = titleEdit.value;
+                  postObject.body = bodyEdit.value;
+                  postObject.author = authorEdit.value;
+                  postObject.date = dateCreator();
+                  savePosts();
+                  renderAllPosts(postCollection);
+                  analytics.update(postCollection);
+  
+                  return true;
+                }
+
+                
           })
       })
 
@@ -132,19 +183,19 @@ const app = (function(){
       })
     }
 
-    function renderErrors() {
-        $errorMessage.innerHTML = "";
+    function renderErrors($domElement, arr) {
+        $domElement.innerHTML = "";
     
-        errorArr.forEach((e, index) => {
-          $errorMessage.innerHTML += e;
-          if (index < errorArr.length - 1) {
-            $errorMessage.innerHTML += ", ";
+        arr.forEach((e, index) => {
+          $domElement.innerHTML += e;
+          if (index < arr.length - 1) {
+            $domElement.innerHTML += ", ";
           } else {
-            $errorMessage.innerHTML += ".";
+            $domElement.innerHTML += ".";
           }
         });
     
-        errorArr = [];
+        arr = [];
       }
 
     function retrievePosts() {
@@ -164,30 +215,30 @@ const app = (function(){
     function setUpListeners(){
         $addPostButton.addEventListener('click', addPostClicked);
         $deleteAllButton.addEventListener('click', deleteAllPosts);
-        $searchBar.addEventListener("keyup", searchAndFilter);
-        $dropdownFilter.addEventListener("change", searchAndFilter);
+        $searchBar.addEventListener("keyup", renderAllPosts);
+        // $dropdownFilter.addEventListener("change", searchAndFilter);
     }
 
-    const validatePost = (title, body, author) => {
-        if (!title) errorArr.push("Title required");
-        if (!body) errorArr.push("Body required");
-        if (!author) errorArr.push("Author required");
+    const validatePost = (title, body, author, arr) => {
+        if (!title) arr.push("Title required");
+        if (!body) arr.push("Body required");
+        if (!author) arr.push("Author required");
       };
 
-      const searchPosts = () => {
-        const searchBarValue = $searchBar.value;
-        PostManager.removeHTML();
+      // const searchPosts = () => {
+      //   const searchBarValue = $searchBar.value;
+      //   PostManager.removeHTML();
 
-        const searchResults = postCollection.filter(
-          post =>
-            post.title.toUpperCase().includes(searchBarValue.toUpperCase()) ||
-            post.body.toUpperCase().includes(searchBarValue.toUpperCase()) ||
-            post.author.toUpperCase().includes(searchBarValue.toUpperCase())
-        );
+      //   const searchResults = postCollection.filter(
+      //     post =>
+      //       post.title.toUpperCase().includes(searchBarValue.toUpperCase()) ||
+      //       post.body.toUpperCase().includes(searchBarValue.toUpperCase()) ||
+      //       post.author.toUpperCase().includes(searchBarValue.toUpperCase())
+      //   );
 
-        renderAllPosts(searchResults);
-        return searchResults;
-      };
+      //   renderAllPosts(searchResults);
+      //   return searchResults;
+      // };
     
       const filterPostsByDropdown = (arr) => {
         switch ($dropdownFilter.selectedIndex) {
@@ -216,9 +267,7 @@ const app = (function(){
         }
       }
     
-      function searchAndFilter(){
-        filterPostsByDropdown(searchPosts());
-      }
+      
 
     function init(){
         setUpListeners();
